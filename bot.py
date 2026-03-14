@@ -3,20 +3,13 @@ import internetarchive
 from telegram import Update
 from telegram.ext import ApplicationBuilder, MessageHandler, filters, ContextTypes
 
-# Environment variables
 BOT_TOKEN = os.getenv("8659154394:AAFGp3U2HVLd_VxIIMbx32XIRYnKoGu7QmA")
 IA_ACCESS_KEY = os.getenv("SHFLEKv9geVL6wG1")
 IA_SECRET_KEY = os.getenv("wX8TCn2lga9yhUcQ")
 
-# Configure Internet Archive
-internetarchive.configure(
-    access=IA_ACCESS_KEY,
-    secret=IA_SECRET_KEY
-)
-
 async def upload(update: Update, context: ContextTypes.DEFAULT_TYPE):
     file = await update.message.document.get_file()
-    
+
     file_path = "upload_file"
     await file.download_to_drive(file_path)
 
@@ -28,7 +21,9 @@ async def upload(update: Update, context: ContextTypes.DEFAULT_TYPE):
         metadata={
             "title": identifier,
             "mediatype": "movies"
-        }
+        },
+        access_key=IA_ACCESS_KEY,
+        secret_key=IA_SECRET_KEY
     )
 
     link = f"https://archive.org/details/{identifier}"
